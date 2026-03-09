@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // 빈 행 건너뛰기
             }
 
-            // 1. [핵심] 현재 행이 헤더인지 매번 검사
             const potentialHeaders = {};
             row.forEach((cell, index) => {
                 const trimmedCell = String(cell).trim();
@@ -105,27 +104,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const isHeader = potentialHeaders.hasOwnProperty('성명') && potentialHeaders.hasOwnProperty('교과') && potentialHeaders.hasOwnProperty('학점');
 
             if (isHeader) {
-                // 2. 헤더인 경우: 열 매핑 업데이트, 학생 이름 컨텍스트 리셋
                 headerMapping = potentialHeaders;
                 headerFoundAtLeastOnce = true;
-                currentStudentName = ""; // 새 테이블이므로 학생 이름 초기화
+                currentStudentName = "";
                 console.log(`   - ${rowIndex + 1}번째 행 => 헤더 발견/갱신. 열 매핑:`, headerMapping);
-                return; // 헤더 행 처리는 여기까지 하고 다음 행으로
+                return;
             }
 
-            // 3. 헤더가 아닌 경우: 데이터로 처리
             if (!headerFoundAtLeastOnce) {
-                return; // 아직 파일에서 첫 헤더를 못 찾았다면 건너뛰기
+                return;
             }
             
-            // 이름 처리 (이전 이름 상속)
             const nameCell = row[headerMapping['성명']];
             if (nameCell && String(nameCell).trim() !== '') {
                 currentStudentName = String(nameCell).trim();
             }
 
             if (!currentStudentName) {
-                return; // 현재 유효한 학생 이름이 없으면 처리 불가
+                return;
             }
 
             const originalCategory = row[headerMapping['교과']];
@@ -175,13 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return studentData.map(student => {
             const earnedCredits = {};
             categoryKeys.forEach(key => earnedCredits[key] = 0);
-            const unclassifiedSubjects = [];
-
+            
             student.subjects.forEach(subject => {
                 if (subject.classified && earnedCredits.hasOwnProperty(subject.category)) {
                     earnedCredits[subject.category] += subject.credits;
-                } else {
-                    unclassifiedSubjects.push({ name: subject.name || subject.category, credits: subject.credits });
                 }
             });
 
@@ -192,7 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 results[category] = { earned, required, difference: earned - required };
             });
 
-            return { name: student.name, results, unclassified: unclassifiedSubjects };
+            const kmeTotal = (results['국어']?.earned || 0) + (results['수학']?.earned || 0) + (results['영어']?.earned || 0);
+
+            return { name: student.name, results, kmeTotal: kmeTotal };
         });
     }
 
@@ -214,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const headerRow = document.createElement('tr');
         headerRow.innerHTML = '<th>학생명</th>' + 
             Object.keys(requiredCredits).map(cat => `<th>${cat} (${requiredCredits[cat]})</th>`).join('') + 
-            '<th>미분류</th>';
+            '<th>국영수합</th>';
         thead.appendChild(headerRow);
         table.appendChild(thead);
 
@@ -229,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 rowHTML += `<td><span class="${statusClass}">${text}</span></td>`;
             });
 
-            const unclassifiedText = studentResult.unclassified.map(s => `${s.name} (${s.credits})`).join(', ');
-            rowHTML += `<td>${unclassifiedText}</td>`;
+            const kmePercentage = ((studentResult.kmeTotal / 174) * 100).toFixed(1);
+            rowHTML += `<td>${studentResult.kmeTotal}/174 (${kmePercentage}%)</td>`;
             
             row.innerHTML = rowHTML;
             tbody.appendChild(row);
@@ -249,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const categoryKeys = Object.keys(lastRequiredCredits);
-        const headerRow = ['학생명', ...categoryKeys.map(cat => `${cat} (${lastRequiredCredits[cat]})`), '미분류'];
+        const headerRow = ['학생명', ...categoryKeys.map(cat => `${cat} (${lastRequiredCredits[cat]})`), '국영수합'];
 
         const dataRows = analysisResults.map(studentResult => {
             const row = [studentResult.name];
@@ -257,7 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = studentResult.results[category];
                 row.push(result.difference >= 0 ? `충족 (${result.earned})` : `미충족 (${result.difference})`);
             });
-            row.push(studentResult.unclassified.map(s => `${s.name} (${s.credits})`).join(', '));
+            const kmePercentage = ((studentResult.kmeTotal / 174) * 100).toFixed(1);
+            row.push(`${studentResult.kmeTotal}/174 (${kmePercentage}%)`);
             return row;
         });
 
