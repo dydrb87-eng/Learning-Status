@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsTableDiv = document.getElementById('results-table');
     const exportBtn = document.getElementById('export-btn');
 
+    const unclassifiedContainer = document.getElementById('unclassified-subjects-container');
+    const unclassifiedTitle = document.getElementById('unclassified-title');
+    const unclassifiedList = document.getElementById('unclassified-list');
+
     let analysisResults = [];
     let lastRequiredCredits = {};
 
@@ -88,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach((row, rowIndex) => {
             if (!row || row.length === 0 || row.every(cell => !cell || String(cell).trim() === '')) {
-                return; // 빈 행 건너뛰기
+                return;
             }
 
             const potentialHeaders = {};
@@ -155,7 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const classified = definedCategories.includes(finalCategory);
 
             students[currentStudentName].subjects.push({
-                category: finalCategory,
+                originalCategory: String(originalCategory).trim(),
+                finalCategory: finalCategory,
                 name: subjectName,
                 credits: credits,
                 classified: classified
@@ -171,10 +176,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return studentData.map(student => {
             const earnedCredits = {};
             categoryKeys.forEach(key => earnedCredits[key] = 0);
+            const unclassifiedSubjects = [];
             
             student.subjects.forEach(subject => {
-                if (subject.classified && earnedCredits.hasOwnProperty(subject.category)) {
-                    earnedCredits[subject.category] += subject.credits;
+                if (subject.classified && earnedCredits.hasOwnProperty(subject.finalCategory)) {
+                    earnedCredits[subject.finalCategory] += subject.credits;
+                } else if (!subject.classified) {
+                    unclassifiedSubjects.push({ 
+                        name: subject.name, 
+                        category: subject.originalCategory 
+                    });
                 }
             });
 
@@ -187,13 +198,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const kmeTotal = (results['국어']?.earned || 0) + (results['수학']?.earned || 0) + (results['영어']?.earned || 0);
 
-            return { name: student.name, results, kmeTotal: kmeTotal };
+            return { 
+                name: student.name, 
+                results, 
+                kmeTotal: kmeTotal, 
+                unclassifiedSubjects 
+            };
         });
     }
 
     function displayResults(results, requiredCredits) {
         resultsTableDiv.innerHTML = '';
         exportBtn.disabled = true;
+        unclassifiedContainer.hidden = true;
+        unclassifiedList.innerHTML = '';
 
         if (results.length === 0) {
             resultsTableDiv.innerHTML = '<p>분석할 데이터가 없거나, 데이터 형식이 올바르지 않습니다. 헤더(성명, 교과, 학점)를 확인해주세요.</p>';
@@ -213,6 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
         thead.appendChild(headerRow);
         table.appendChild(thead);
 
+        const allUnclassified = [];
+
         results.forEach(studentResult => {
             const row = document.createElement('tr');
             let rowHTML = `<td>${studentResult.name}</td>`;
@@ -229,11 +249,28 @@ document.addEventListener('DOMContentLoaded', () => {
             
             row.innerHTML = rowHTML;
             tbody.appendChild(row);
+
+            if (studentResult.unclassifiedSubjects.length > 0) {
+                const studentUnclassified = studentResult.unclassifiedSubjects.map(s => `${s.name}(${s.category})`).join(', ');
+                allUnclassified.push({ name: studentResult.name, subjects: studentUnclassified });
+            }
         });
 
         table.appendChild(tbody);
         container.appendChild(table);
         resultsTableDiv.appendChild(container);
+
+        if (allUnclassified.length > 0) {
+            unclassifiedContainer.hidden = false;
+            const totalCount = allUnclassified.reduce((acc, curr) => acc + curr.subjects.split(', ').length, 0);
+            unclassifiedTitle.textContent = `미분류 과목 (${totalCount}개)`;
+            allUnclassified.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${item.name}:</strong> ${item.subjects}`;
+                unclassifiedList.appendChild(li);
+            });
+        }
+
         exportBtn.disabled = false;
     }
 

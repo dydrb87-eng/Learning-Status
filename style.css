@@ -196,7 +196,12 @@ input[type="file"] {
 
 #results-table {
     margin-top: 1rem;
-    overflow-x: auto;
+}
+
+.results-table-container {
+    max-height: 500px; /* 스크롤을 위한 최대 높이 설정 */
+    overflow-y: auto;   /* 세로 스크롤 활성화 */
+    overflow-x: auto;   /* 가로 스크롤도 필요시 활성화 */
 }
 
 .results-table-container table {
@@ -211,8 +216,11 @@ input[type="file"] {
 }
 
 .results-table-container th {
-    background-color: #f1f3f5;
+    position: sticky;
+    top: 0;
+    background-color: #e9ecef; /* 헤더 배경색 변경하여 본문과 구분 */
     font-weight: 500;
+    z-index: 1; /* 다른 요소 위에 오도록 설정 */
 }
 
 .status-pass {
@@ -224,6 +232,30 @@ input[type="file"] {
     color: var(--error-color);
     font-weight: 700;
 }
+
+.unclassified-report {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 8px;
+}
+
+.unclassified-report h2 {
+    color: #f5a623;
+    border-bottom: none;
+    margin-bottom: 0.5rem;
+}
+
+.unclassified-report ul {
+    list-style-position: inside;
+    padding-left: 0.5rem;
+}
+
+.unclassified-report li {
+    margin-bottom: 0.5rem;
+}
+
 
 @media (max-width: 768px) {
     body { padding: 1rem; }
