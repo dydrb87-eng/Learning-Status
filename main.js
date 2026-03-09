@@ -295,6 +295,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const worksheet = XLSX.utils.aoa_to_sheet([headerRow, ...dataRows]);
+        
+        // Freeze the first row (header)
+        worksheet['!freeze'] = { y: 1 };
+
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, '분석결과');
 
