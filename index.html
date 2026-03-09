@@ -39,7 +39,7 @@
                         <div class="credit-cell"><input type="number" id="history-credit" value="6"></div>
                     </div>
                     <div class="credit-row">
-                        <div class="credit-cell">사회(역사/도덕 제외)</div>
+                        <div class="credit-cell">사회</div>
                         <div class="credit-cell"><input type="number" id="social-credit" value="10"></div>
                     </div>
                     <div class="credit-row">
@@ -54,13 +54,15 @@
             </section>
 
             <section class="upload">
-                <h2>엑셀 파일 업로드</h2>
+                <h2>엑셀 파일 업로드 & 분석</h2>
                 <input type="file" id="excel-file" accept=".xlsx, .xls">
-                <button id="analyze-btn">분석 시작</button>
             </section>
 
             <section class="results">
-                <h2>분석 결과</h2>
+                <div id="results-section-header">
+                    <h2>분석 결과</h2>
+                    <button id="export-btn" disabled>엑셀로 내보내기</button>
+                </div>
                 <div id="results-table"></div>
             </section>
         </main>

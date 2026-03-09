@@ -58,13 +58,13 @@ main {
 }
 
 section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 section h2 {
     font-size: 1.8rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--border-color);
     color: var(--primary-color);
@@ -94,7 +94,7 @@ section h2 {
 
 .credit-cell {
     display: table-cell;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
 }
@@ -105,7 +105,7 @@ section h2 {
 
 .credit-cell input[type="number"] {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 1rem;
@@ -167,9 +167,35 @@ input[type="file"] {
     transform: none;
 }
 
+#results-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#export-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: var(--success-color);
+    color: var(--white-color);
+    border: none;
+    transition: background-color 0.2s;
+}
+
+#export-btn:hover {
+    background-color: #68b31a;
+}
+
+#export-btn:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
 
 #results-table {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     overflow-x: auto;
 }
 
@@ -205,6 +231,6 @@ input[type="file"] {
     header { padding: 1.5rem; }
     header h1 { font-size: 2rem; }
     main { padding: 1rem; }
-    .credit-cell { padding: 0.75rem; }
+    .credit-cell { padding: 0.5rem; }
     .upload label, #analyze-btn { display: block; width: 100%; margin: 0 0 1rem 0; }
 }
