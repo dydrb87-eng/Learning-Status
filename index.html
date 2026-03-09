@@ -1,14 +1,70 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 이수 학점 점검 도구</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+    <div class="container">
+        <header>
+            <h1>학생 이수 학점 점검 도구</h1>
+            <p>엑셀 파일을 업로드하여 학생들의 필수 이수 학점 충족 여부를 확인하세요.</p>
+        </header>
+
+        <main>
+            <section class="settings">
+                <h2>필수 이수 학점 기준 설정</h2>
+                <div class="credit-table">
+                    <div class="credit-row header">
+                        <div class="credit-cell">교과 영역</div>
+                        <div class="credit-cell">필수 학점</div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">국어</div>
+                        <div class="credit-cell"><input type="number" id="korean-credit" value="10"></div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">수학</div>
+                        <div class="credit-cell"><input type="number" id="math-credit" value="10"></div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">영어</div>
+                        <div class="credit-cell"><input type="number" id="english-credit" value="10"></div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">한국사</div>
+                        <div class="credit-cell"><input type="number" id="history-credit" value="6"></div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">사회(역사/도덕 제외)</div>
+                        <div class="credit-cell"><input type="number" id="social-credit" value="10"></div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">과학</div>
+                        <div class="credit-cell"><input type="number" id="science-credit" value="12"></div>
+                    </div>
+                    <div class="credit-row">
+                        <div class="credit-cell">생활/교양</div>
+                        <div class="credit-cell"><input type="number" id="liberal-arts-credit" value="16"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="upload">
+                <h2>엑셀 파일 업로드</h2>
+                <input type="file" id="excel-file" accept=".xlsx, .xls">
+                <button id="analyze-btn">분석 시작</button>
+            </section>
+
+            <section class="results">
+                <h2>분석 결과</h2>
+                <div id="results-table"></div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>

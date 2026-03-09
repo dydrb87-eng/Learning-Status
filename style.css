@@ -1,1 +1,210 @@
-/* Add styles here */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #f5a623;
+    --background-color: #f8f9fa;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --white-color: #fff;
+    --error-color: #d0021b;
+    --success-color: #7ed321;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    background-color: var(--white-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    overflow: hidden;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 5px solid var(--secondary-color);
+}
+
+header h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+main {
+    padding: 2rem;
+}
+
+section {
+    margin-bottom: 2.5rem;
+}
+
+section h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--primary-color);
+}
+
+.credit-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.credit-row {
+    display: table-row;
+}
+
+.credit-row:nth-child(even) {
+    background-color: #fdfdfe;
+}
+
+.credit-row.header {
+    background-color: #f1f3f5;
+    font-weight: 500;
+}
+
+.credit-cell {
+    display: table-cell;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.credit-cell:first-child {
+    width: 70%;
+}
+
+.credit-cell input[type="number"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    text-align: right;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.credit-cell input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.upload {
+    text-align: center;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.upload label {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-right: 1rem;
+}
+
+.upload label:hover {
+    background-color: #f7b731;
+}
+
+#analyze-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#analyze-btn:hover {
+    background-color: #3a7ac8;
+    transform: translateY(-2px);
+}
+
+#analyze-btn:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+#results-table {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+}
+
+.results-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.results-table-container th, .results-table-container td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.results-table-container th {
+    background-color: #f1f3f5;
+    font-weight: 500;
+}
+
+.status-pass {
+    color: var(--success-color);
+    font-weight: 700;
+}
+
+.status-fail {
+    color: var(--error-color);
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    body { padding: 1rem; }
+    .container { padding: 0; }
+    header { padding: 1.5rem; }
+    header h1 { font-size: 2rem; }
+    main { padding: 1rem; }
+    .credit-cell { padding: 0.75rem; }
+    .upload label, #analyze-btn { display: block; width: 100%; margin: 0 0 1rem 0; }
+}
